@@ -24,10 +24,7 @@ lexicon_words = set(lexicon.index)
 
 packages = pd.read_csv('data/raw/packages.csv')
 
-# group by test_id
-tests = packages.groupby('test_id')
-
-processed = pd.DataFrame(columns=['test_id', 'emotion','emotive_word_count','impressions','clicks'])
+processed = pd.DataFrame(columns=['test_id', 'test_mean_impressions','test_mean_clicks','emotion','emotive_word_count','impressions','clicks'])
 
 def safe_tokenize(x):
     try:
@@ -52,6 +49,9 @@ processed['emotive_word_count'] = emotive_tokenized_words.progress_apply(len)
 processed['emotion'] = emotive_tokenized_words.progress_apply(to_emotion_profile)
 processed = processed[processed['emotive_word_count'] > 0]
 
+test_means = processed.groupby(['test_id']).mean()
+processed['test_mean_impressions'] = processed['test_id'].progress_apply(lambda x: test_means['impressions'].loc[x])
+processed['test_mean_clicks'] = processed['test_id'].progress_apply(lambda x: test_means['clicks'].loc[x])
 print(processed.head())
 processed.to_csv('data/processed/processed_x.csv')
 
@@ -69,5 +69,8 @@ processed.to_csv('data/processed/processed_x.csv')
 #        ans.append([gb1[i][0]] + emotions.tolist() + [nofwords, gb1i1[j][1], gb1i1[j][2]])
 #arr = np.array(ans)
 #np.save('datathon_data', arr)
+
+
+
 
 
