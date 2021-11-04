@@ -15,12 +15,14 @@
 ---
 # File Explanation
 - [Raw Data](data/raw) - All the raw data including lexicons and packages
-- [Processed Data](data/processed) - The processed dat
+- [Vizualizations](data/vizualizations) - Vizualizations from the analysis
+- [Popularity Predictor](src/popularity_predictor.py) - Popularity Predictor Models
+- [Processed Data](data/processed) - The processed data
 - [Headline To Emotion](src/headline_to_emotion.py) - **Takes the packages data set and extracts the emotions from all the data**
 
 
 ---
 # TODO
 - [x] Also carry the mean for a test with each x
-- [ ] Create a random forest model with a linear model to predict change in clicks (or equiv)
+- [x] Create a random forest model with a linear model to predict change in clicks (or equiv)
 - [ ] Create a ANN to do same as above
