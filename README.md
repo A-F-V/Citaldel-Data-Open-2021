@@ -26,3 +26,4 @@
 - [x] Also carry the mean for a test with each x
 - [x] Create a random forest model with a linear model to predict change in clicks (or equiv)
 - [ ] Create a ANN to do same as above
+- [ ] Bar graph instead of scatter
