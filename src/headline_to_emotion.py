@@ -24,7 +24,7 @@ lexicon_words = set(lexicon.index)
 
 packages = pd.read_csv('data/raw/packages.csv')
 
-processed = pd.DataFrame(columns=['test_id', 'test_mean_impressions','test_mean_clicks','emotion','emotive_word_count','impressions','clicks'])
+processed = pd.DataFrame(columns=['test_id', 'test_mean_impressions','test_mean_clicks','emotive_word_count','impressions','clicks'])
 
 def safe_tokenize(x):
     try:
@@ -46,14 +46,15 @@ tokenized_words = packages['headline'].progress_apply(safe_tokenize)
 emotive_tokenized_words = tokenized_words.progress_apply(to_emotive_lexicons)
 
 processed['emotive_word_count'] = emotive_tokenized_words.progress_apply(len)
-processed['emotion'] = emotive_tokenized_words.progress_apply(to_emotion_profile)
-processed = processed[processed['emotive_word_count'] > 0]
+goodindices = processed['emotive_word_count'] > 0
+emotions = pd.DataFrame(emotive_tokenized_words[goodindices].progress_apply(to_emotion_profile).to_list(),columns=['Positive','Negative','Anger','Anticipation','Disgust','Fear','Joy','Sadness','Surprise','Trust'])
+processed = processed[goodindices].reset_index(drop=True)
+processed = pd.concat([processed,emotions],axis=1)
 
 test_means = processed.groupby(['test_id']).mean()
 processed['test_mean_impressions'] = processed['test_id'].progress_apply(lambda x: test_means['impressions'].loc[x])
 processed['test_mean_clicks'] = processed['test_id'].progress_apply(lambda x: test_means['clicks'].loc[x])
-print(processed.head())
-processed.to_csv('data/processed/processed_x.csv')
+processed.to_csv('data/processed/processed_xy.csv')
 
 #for i in range(len(gb)): # [test_id, [emotions], number_of_words, impressions, clicks]
 #    if i% 1000 == 0: print(i)
