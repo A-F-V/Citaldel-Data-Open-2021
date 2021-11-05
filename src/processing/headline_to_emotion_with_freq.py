@@ -12,7 +12,7 @@ from nltk.corpus import words
 from tqdm import tqdm
 tqdm.pandas()
 
-total_freq = 588090082941
+total_freq = 5880900
 
 lemmatizer = WordNetLemmatizer()
 frequency = pd.read_csv('data/processed/unigram_lemmatized_freq.csv',index_col=0)
@@ -23,7 +23,7 @@ lexicon = lexicon.set_index('English (en)') #now can find word by indexing
 words = words.words()
 lexicon_words = set(lexicon.index)
 
-packages = pd.read_csv('data/raw/packages.csv')
+packages = pd.read_csv('data/raw/packages.csv').head(10000)
 
 processed = pd.DataFrame(columns=['test_id', 'test_mean_impressions','test_mean_clicks','emotive_word_count','token_word_count','impressions','clicks'])
 
@@ -43,7 +43,7 @@ def freq(word):
         return 1
 
 def to_emotion_profile(x):
-    return np.sum([np.array(lexicon.loc[word])*(np.log(frequency.loc[word].values[0]+1)) for word in x],axis=0) 
+    return np.sum([np.array(lexicon.loc[word])*-(np.log(frequency.loc[word].values[0]+1)-15) for word in x],axis=0) 
 
 processed['test_id'] = packages['test_id'].astype(str)
 processed['impressions'] = packages['impressions']
